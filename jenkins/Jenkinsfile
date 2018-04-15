@@ -1,21 +1,36 @@
 pipeline {
-    agent any
+    agent { label 'master' }
 
     environment {
         CI = 'true'
     }
+def runInVagrant = { String command ->
+	sh 'cd /tmp/testing/vagrant && vagrant ssh -c "$command"'
+}
+
     stages {
-        stage('Build') {
+        stage('SetupVM') {
             steps {
-                sh 'npm install'
+		sh 'cd /tmp/testing/vagrant'
+		sh 'vagrant destroy -f'
+		sh 'vagrant up'
+                
             }
         }
+	stage('Build'){
+	    { label 'vagrant' }
+	    steps {
+		sh 'npm build'
+	    }
+	}
         stage('Test') {
+		{ label 'vagrant' }
             steps {
                 sh 'npm test'
             }
         }
         stage('Deliver') {
+		{ label 'vagrant' }
             steps {
                 sh 'npm build'
             }
