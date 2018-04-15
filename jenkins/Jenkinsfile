@@ -9,8 +9,7 @@ pipeline {
         stage('SetupVM') {
             steps {
 		sh 'cd /tmp/testing/vagrant'
-		sh 'vagrant destroy -f'
-		sh 'vagrant up'
+		sh './startup.sh'
                 
             }
         }
