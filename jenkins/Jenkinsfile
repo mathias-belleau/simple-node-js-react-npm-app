@@ -4,9 +4,6 @@ pipeline {
     environment {
         CI = 'true'
     }
-def runInVagrant = { String command ->
-	sh 'cd /tmp/testing/vagrant && vagrant ssh -c "$command"'
-}
 
     stages {
         stage('SetupVM') {
